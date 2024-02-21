@@ -1,0 +1,73 @@
+---
+title: "Feb_20_prep"
+output: html_document
+date: "2024-02-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Shiny Interview prep
+
+
+```{r}
+library(shiny)
+library(ggplot2)
+
+ui <- fluidPage(
+  selectInput("dataset", "Select Dataset:",
+              choices = c("iris", "mtcars", "airquality"),
+                  selected = "iris"),
+
+  mainPanel(
+    plotOutput("plot")
+  )
+)
+
+server <- function(input, output, session){
+ 
+    output$plot <- renderPlot({
+      data <- switch(input$dataset,
+                     "iris" = iris,
+                     "mtcars" = mtcars,
+                     "airquality" = airquality)
+      
+  # Create a scatter plot based on the selected dataset
+    if (input$dataset == "iris") {
+      ggplot(data, aes(x = Sepal.Length, y = Sepal.Width)) +
+        geom_point() +
+        labs(title = "Scatter Plot of iris")
+    } else if (input$dataset == "mtcars") {
+      ggplot(data, aes(x = wt, y = mpg)) +
+        geom_point() +
+        labs(title = "Scatter Plot of mtcars")
+    } else if (input$dataset == "airquality") {
+      ggplot(data, aes(x = Temp, y = Ozone)) +
+        geom_point() +
+        labs(title = "Scatter Plot of airquality")
+    }
+    })
+}
+
+
+
+shinyApp(ui,server)
+
+```
+
+```{r}
+
+
+# Install and load the readxl package
+#install.packages("readxl")
+library(readxl)
+library(dplyr)
+
+# Read the Excel file into a data frame
+df <- read_excel("data/Job_Search_2024.xlsx")
+
+df_new <- select(df, c(-username,-notes))
+
+
+```
